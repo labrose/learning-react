@@ -22,7 +22,17 @@ import './index.css';
     }
   
     render() {  
+        let gameBoard = [];
+        const boardSize = 3;
+        for (let r = 0; r < boardSize; r++) {
+            let row = [];
+            for (let c = 0; c < boardSize; c++) {
+                row.push(this.renderSquare(r * boardSize + c))
+            }
+        gameBoard.push(<div className="board-row">{row}</div>);
+        }
       return (
+        
         <div>
           <div className="board-row">
             {this.renderSquare(0)}
