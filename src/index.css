@@ -35,6 +35,10 @@ body {
   .square:focus {
     outline: none;
   }
+
+  .list-selected {
+      font-weight: bold;
+  }
   
   .kbd-navigation .square:focus {
     background: #ddd;
