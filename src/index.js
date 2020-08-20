@@ -66,7 +66,8 @@ import './index.css';
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
             history: history.concat([{
-                squares: squares
+                squares: squares,
+                latestMove: i
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
@@ -86,9 +87,12 @@ import './index.css';
         const winner = calculateWinner(current.squares);
 
         const moves = history.map((step, move) => {
+            const latestMove = step.latestMove;
+            const col = latestMove % 3;
+            const row = Math.floor(latestMove / 3);
             const desc = move ?
-                'Go to move #' + move :
-                ' Go to game start';
+                `Go to move #${move} (${col}, ${row})`:
+                'Go to game start';
             return (
                 <li key={move}>
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
