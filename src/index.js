@@ -4,7 +4,7 @@ import './index.css';
 
     function Square(props) {
         return (
-            <button className="Square" onClick={props.onClick}>
+            <button className="square" onClick={props.onClick}>
                 {props.value}
             </button>
         )
@@ -39,7 +39,14 @@ import './index.css';
     }
   
     render() {
-      const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner) {
+        status = 'Winner: ' + winner;
+    } else {
+        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
+    
   
       return (
         <div>
@@ -78,6 +85,26 @@ import './index.css';
         </div>
       );
     }
+  }
+
+  function calculateWinner(squares) {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+      for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+          return squares[a];
+        }
+      }
+      return null;
   }
   
   // ========================================
