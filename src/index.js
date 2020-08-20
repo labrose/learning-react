@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
     function Square(props) {
+        const winSquare = props.winSquare;
         return (
-            <button className="square" onClick={props.onClick}>
+            <button className={winSquare ? "square-win" :"square"} onClick={props.onClick}>
                 {props.value}
             </button>
         )
@@ -13,10 +14,13 @@ import './index.css';
   class Board extends React.Component {
 
     renderSquare(i) {
+        const winLine = this.props.winLine;
+
       return (
         <Square 
             value={this.props.squares[i]} 
             onClick={() => this.props.onClick(i)}
+            winSquare={winLine && winLine.includes(i)}
         />)
       ;
     }
@@ -33,23 +37,7 @@ import './index.css';
         }
       return (
         
-        <div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
-        </div>
+        gameBoard
       );
     }
   }
@@ -105,7 +93,7 @@ import './index.css';
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
+        const winInfo = calculateWinner(current.squares);
 
         let moves = history.map((step, move) => {
             const latestMove = step.latestMove;
@@ -131,8 +119,9 @@ import './index.css';
         }
 
         let status;
-        if (winner) {
-            status = 'Winner: ' + winner;
+        if (winInfo) {
+            status = 'Winner: ' + winInfo.winner;
+            
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
@@ -145,6 +134,7 @@ import './index.css';
                 <Board 
                     squares={current.squares}
                     onClick={(i) => this.handleClick(i)}
+                    winLine = {winInfo ? winInfo.winLine : ''}
                 />
             </div>
             <div className="game-info">
@@ -175,7 +165,10 @@ import './index.css';
       for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-          return squares[a];
+          return {
+              winner: squares[a],
+              winLine: lines[i],
+          }
         }
       }
       return null;
