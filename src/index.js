@@ -63,6 +63,7 @@ import './index.css';
             }],
             stepNumber: 0,
             xIsNext: true,
+            listIsDesc: false,
         };
     }
 
@@ -81,6 +82,16 @@ import './index.css';
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
+            listIsDesc: this.state.listIsDesc,
+        });
+    }
+
+    toggleList() {
+        this.setState({
+            history: this.state.history,
+            stepNumber: this.state.stepNumber,
+            xIsNext: this.state.xIsNext,
+            listIsDesc: !this.state.listIsDesc,
         });
     }
 
@@ -96,7 +107,7 @@ import './index.css';
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
 
-        const moves = history.map((step, move) => {
+        let moves = history.map((step, move) => {
             const latestMove = step.latestMove;
             const col = latestMove % 3;
             const row = Math.floor(latestMove / 3);
@@ -113,12 +124,20 @@ import './index.css';
             );
         });
 
+        const sortMsg = this.state.listIsDesc ? 'Sort Descending': 'Sort Ascending';
+        const isListDesc = this.state.listIsDesc;
+        if (isListDesc) {
+            moves.reverse();
+        }
+
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
+
+        
 
         return (
             <div className="game">
@@ -130,6 +149,11 @@ import './index.css';
             </div>
             <div className="game-info">
                 <div>{status}</div>
+                <div>
+                    <button onClick={() => this.toggleList()}>
+                        {sortMsg}
+                    </button>
+                </div>
                 <ol>{moves}</ol>
             </div>
             </div>
